@@ -250,7 +250,7 @@ htsmsg_t*         epggrab_module_list       ( void );
 extern epggrab_module_list_t epggrab_modules;
 extern pthread_mutex_t       epggrab_mutex;
 extern int                   epggrab_running;
-extern uint32_t              epggrab_interval;
+extern char                 *epggrab_cron;
 extern epggrab_module_int_t* epggrab_module;
 extern uint32_t              epggrab_channel_rename;
 extern uint32_t              epggrab_channel_renumber;
@@ -260,7 +260,7 @@ extern uint32_t              epggrab_epgdb_periodicsave;
 /*
  * Set configuration
  */
-int  epggrab_set_interval         ( uint32_t interval );
+int  epggrab_set_cron             ( const char *cron );
 int  epggrab_set_module           ( epggrab_module_t *mod );
 int  epggrab_set_module_by_id     ( const char *id );
 int  epggrab_set_channel_rename   ( uint32_t e );
