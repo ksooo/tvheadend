@@ -199,8 +199,6 @@ struct epggrab_ota_mux
   
   int                                om_complete;     ///< Has completed a scan
   int                                om_active;
-  int                                om_timeout;      ///< User configurable
-  int                                om_interval;
   time_t                             om_when;         ///< Next event time
 
   LIST_ENTRY(epggrab_ota_mux)        om_q_link;
@@ -214,8 +212,6 @@ struct epggrab_ota_map
 {
   LIST_ENTRY(epggrab_ota_map)         om_link;
   epggrab_module_ota_t               *om_module;
-  int                                 om_timeout;
-  int                                 om_interval;
   int                                 om_complete;
   int                                 om_first;
   uint64_t                            om_tune_count;
