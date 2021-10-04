@@ -50,7 +50,7 @@
 
 static void *htsp_server, *htsp_server_2;
 
-#define HTSP_PROTO_VERSION 36
+#define HTSP_PROTO_VERSION 37
 
 #define HTSP_ASYNC_OFF  0x00
 #define HTSP_ASYNC_ON   0x01
@@ -858,7 +858,7 @@ htsp_build_channel(channel_t *ch, const char *method, htsp_connection_t *htsp)
   service_t *t;
   epg_broadcast_t *now, *next = NULL;
   int64_t chnum = channel_get_number(ch);
-  const char *icon;
+  const char *icon, *provider;
   char buf[512];
 
   htsmsg_t *out = htsmsg_create_map();
@@ -871,6 +871,8 @@ htsp_build_channel(channel_t *ch, const char *method, htsp_connection_t *htsp)
     htsmsg_add_u32(out, "channelNumberMinor", channel_get_minor(chnum));
 
   htsmsg_add_str(out, "channelName", channel_get_name(ch, channel_blank_name));
+  if (provider = channel_get_provider_name(ch))
+    htsmsg_add_str(out, "channelProviderName", provider);
   if ((icon = channel_get_icon(ch)))
     htsmsg_add_str(out, "channelIcon", htsp_image(htsp, icon, buf, sizeof(buf), 8));
 

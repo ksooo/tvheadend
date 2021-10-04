@@ -282,6 +282,26 @@ channel_class_get_name ( void *o )
   return &prop_ptr;
 }
 
+static int
+channel_class_set_provider_name ( void *o, const void *p )
+{
+  channel_t *ch = o;
+  const char *s = p;
+  if (strcmp(s ?: "", ch->ch_provider_name ?: "")) {
+    free(ch->ch_provider_name);
+    ch->ch_provider_name = s ? strdup(s) : NULL;
+    return 1;
+  }
+  return 0;
+}
+
+static const void *
+channel_class_get_provider_name ( void *o )
+{
+  prop_ptr = channel_get_provider_name(o);
+  return &prop_ptr;
+}
+
 static const void *
 channel_class_get_number ( void *o )
 {
@@ -436,6 +456,15 @@ const idclass_t channel_class = {
       .set      = channel_class_set_name,
       .get      = channel_class_get_name,
       .notify   = channel_class_icon_notify, /* try to re-render default icon path */
+    },
+    {
+      .type     = PT_STR,
+      .id       = "providername",
+      .name     = N_("Provider name"),
+      .desc     = N_("The name of the provider of the channel"),
+      .off      = offsetof(channel_t, ch_provider_name),
+      .set      = channel_class_set_provider_name,
+      .get      = channel_class_get_provider_name,
     },
     {
       .type     = PT_S64,
@@ -914,6 +943,31 @@ channel_rename_and_save ( const char *from, const char *to )
   return num_match;
 }
 
+const char *
+channel_get_provider_name ( const channel_t *ch)
+{
+  const char *s;
+  const idnode_list_mapping_t *ilm;
+  if (ch->ch_provider_name && *ch->ch_provider_name) return ch->ch_provider_name;
+  LIST_FOREACH(ilm, &ch->ch_services, ilm_in2_link)
+    if ((s = service_get_channel_provider_name((service_t *)ilm->ilm_in1)))
+      return s;
+  return NULL;
+}
+
+int
+channel_set_provider_name ( channel_t *ch, const char *name )
+{
+  int save = 0;
+  if (!ch || !name) return 0;
+  if (!ch->ch_provider_name || strcmp(ch->ch_provider_name, name) ) {
+    if (ch->ch_provider_name) free(ch->ch_provider_name);
+    ch->ch_provider_name = strdup(name);
+    save = 1;
+  }
+  return save;
+}
+
 int64_t
 channel_get_number ( const channel_t *ch )
 {
@@ -1351,6 +1405,7 @@ channel_delete ( channel_t *ch, int delconf )
   idnode_unlink(&ch->ch_id);
   free(ch->ch_epg_parent);
   free(ch->ch_name);
+  free(ch->ch_provider_name);
   free(ch->ch_icon);
   free(ch);
 }
@@ -1442,6 +1497,7 @@ static void channels_memoryinfo_update(memoryinfo_t *my)
     size += sizeof(*ch);
     size += tvh_strlen(ch->ch_epg_parent);
     size += tvh_strlen(ch->ch_name);
+    size += tvh_strlen(ch->ch_provider_name);
     size += tvh_strlen(ch->ch_icon);
     count++;
   }

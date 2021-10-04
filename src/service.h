@@ -517,6 +517,7 @@ void sort_elementary_streams(service_t *t);
 
 const char *service_get_channel_name (service_t *s);
 const char *service_get_full_channel_name (service_t *s);
+const char *service_get_channel_provider_name (service_t *s);
 int64_t     service_get_channel_number (service_t *s);
 const char *service_get_source (service_t *s);
 const char *service_get_channel_icon (service_t *s);

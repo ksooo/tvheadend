@@ -54,6 +54,7 @@ typedef struct channel
   int     ch_enabled;
   int     ch_autoname;
   char   *ch_name;                                 /* Note: do not access directly! */
+  char   *ch_provider_name;
   int64_t ch_number;
   char   *ch_icon;
   idnode_list_head_t ch_ctms;
@@ -188,6 +189,9 @@ int channel_set_name ( channel_t *ch, const char *name );
 /// match "from". Lock must be held prior to call.
 /// @return number channels that matched "from".
 int channel_rename_and_save ( const char *from, const char *to );
+
+const char *channel_get_provider_name ( const channel_t *ch );
+int channel_set_provider_name ( channel_t *ch, const char *name );
 
 #define CHANNEL_ENAME_NUMBERS (1<<0)
 #define CHANNEL_ENAME_SOURCES (1<<1)

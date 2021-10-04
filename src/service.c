@@ -1533,6 +1533,17 @@ service_get_full_channel_name ( service_t *s )
 }
 
 /*
+ * Get name for channel provider from service
+ */
+const char *
+service_get_channel_provider_name ( service_t *s )
+{
+  const char *r = NULL;
+  if (s->s_provider_name) r = s->s_provider_name(s);
+  return r;
+}
+
+/*
  * Get number for service
  */
 int64_t

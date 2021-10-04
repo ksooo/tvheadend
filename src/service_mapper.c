@@ -322,9 +322,11 @@ service_mapper_process
           channel_tag_map(channel_tag_find_by_name(tagname, 1), chn, chn);
 
     /* Provider */
-    if (conf->provider_tags)
-      if ((prov = s->s_provider_name(s)))
+    if ((prov = s->s_provider_name(s))) {
+      channel_set_provider_name(chn, prov);
+      if (conf->provider_tags)
         channel_tag_map(channel_tag_find_by_name(prov, 1), chn, chn);
+    }
 
     /* Network */
     if (conf->network_tags) {
