@@ -2451,6 +2451,7 @@ static dvr_entry_t *_dvr_entry_update
   char buf[40];
   int save = 0, updated = 0;
   epg_episode_num_t epnum;
+  dvr_config_t *cfg;
 
   if (enabled >= 0) {
     enabled = !!enabled;
@@ -2515,7 +2516,11 @@ static dvr_entry_t *_dvr_entry_update
 
   /* Configuration */
   if (dvr_config_uuid) {
-    de->de_config = dvr_config_find_by_name_default(dvr_config_uuid);
+    cfg = dvr_config_find_by_uuid(dvr_config_uuid);
+    if (!cfg)
+      cfg = dvr_config_find_by_name_default(dvr_config_uuid);
+
+    de->de_config = cfg;
     save |= DVR_UPDATED_CONFIG;
   }
 
